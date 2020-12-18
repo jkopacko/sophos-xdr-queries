@@ -1,0 +1,35 @@
+# This will look to see if any processes made HTTP calls. This could show a C2 instance.
+
+SELECT 
+sophos_http_journal.PID, 
+sophos_http_journal.PID,
+datetime(sophos_http_journal.time,'unixepoch','localtime') AS LocalTimeStamp, 
+datetime(sophos_http_journal.processStartTime,'unixepoch','localtime') AS processStartTime,
+sophos_http_journal.source,
+sophos_http_journal.sourcePort,
+sophos_http_journal.destination,
+sophos_http_journal.destinationPort,
+sophos_http_journal.url,
+sophos_http_journal.headers AS Command,
+processes.pid, 
+processes.name, 
+processes.path, 
+processes.cmdline, 
+processes.state, 
+processes.cwd, 
+processes.root, 
+processes.on_disk, 
+processes.is_elevated_token
+FROM
+sophos_http_journal
+INNER JOIN processes
+ON 
+sophos_http_journal.PID = processes.pid
+
+If you wanted to sort through the data faster, adding a filter on the contents of on_disk or is_elevated_token can help identify admin level processes or items written as a path on disk.
+
+WHERE processes.is_elevated_token = '1' OR processes.on_disk = '1'
+
+on_disk: 1 = yes, 0 = no, -1 = unknown
+
+is_elevated_token: 1 = yes, 0 = no
