@@ -1,0 +1,10 @@
+#You will need to set a variable domainName and then be able to search for any logs with the user input string
+
+SELECT datetime(sophos_dns_journal.time, 'unixepoch', 'localtime'), 
+sophos_dns_journal.sophosPID,
+sophos_process_journal.cmdline,
+sophos_dns_journal.name 
+FROM sophos_dns_journal
+JOIN sophos_process_journal
+WHERE sophos_dns_journal.name LIKE '%$$domainName$$%'
+AND sophos_process_journal.sophosPID = sophos_dns_journal.sophosPID
