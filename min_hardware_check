@@ -1,0 +1,3 @@
+#This will query for a machine less than 8 GB disk space, 4 GB RAM, or 2 cores.
+
+select cpu_logical_cores, physical_memory, free_space from logical_drives join system_info on 1 and boot_partition=1 where cpu_logical_cores < 2 or physical_memory < 4000000000 or free_space < 8000000000;
