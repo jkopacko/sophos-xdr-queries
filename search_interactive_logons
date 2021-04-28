@@ -1,0 +1,4 @@
+#This will search for interactive logon types
+
+SELECT upn, logon_domain, logon_type FROM logon_sessions
+WHERE logon_type = "Interactive"
