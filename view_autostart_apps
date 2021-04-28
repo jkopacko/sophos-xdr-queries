@@ -1,0 +1,11 @@
+#This query will search for aplications in the auto start report
+
+SELECT
+   name as 'Key Name',
+   source as 'Start Up source',
+   path as 'Path',
+   args as 'Aruments',
+   username as 'Owner',
+   status as 'Status'
+FROM startup_items
+ORDER by status
