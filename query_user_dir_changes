@@ -1,0 +1,11 @@
+#This will query all changes within the user directory for file directory 
+##Set variable name date as variable type Date
+
+SELECT filename,
+       (size / 1024) AS Kb,
+       path,
+       datetime(mtime,'unixepoch','localtime') Modifiedtime
+FROM file
+WHERE (Modifiedtime > $$date$$ AND filename != '.')
+      AND (path LIKE 'C:\Users\%\%\%'
+      OR path LIKE 'C:\Users\%\%')
