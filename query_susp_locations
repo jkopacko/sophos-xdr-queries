@@ -1,0 +1,19 @@
+#### This will use the Sophos File Journal to compare ML, PUA, Local and Global Scoring in suspicious locations of EXEs
+
+SELECT
+sfp.sha256,
+sfp.mlScore,
+sfp.puaScore,
+sfp.globalRep,
+sfp.localRep,
+f.path,
+f.filename,
+datetime(f.atime,'unixepoch','localtime') AS Last_Accessed,
+datetime(f.mtime,'unixepoch','localtime') AS Last_Modified,
+datetime(f.ctime,'unixepoch','localtime') AS Creation_Time
+FROM file f
+LEFT JOIN sophos_file_properties sfp
+    ON f.path = sfp.pathname
+WHERE path LIKE 'C:\users\%\AppData\%.exe'
+OR path LIKE 'C:\users\%\AppData\Roaming\%.exe'
+OR path LIKE 'C:\ProgramData\%.exe' or path LIKE 'C:\Program Files\%.exe'
