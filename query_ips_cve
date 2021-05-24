@@ -1,0 +1,8 @@
+##This will query the IPS Rule Table for a specific CVE you define
+##Declare $$Vuln-Numb$$ as a string operator type
+
+WITH ips_rule_table AS (SELECT line FROM grep WHERE path = 'C:\ProgramData\Sophos\Sophos Network Threat Protection\IPS\system.rules' AND pattern = '(msg:')
+SELECT * 
+FROM ips_rule_table
+WHERE line 
+LIKE '%CVE-$$Vuln-Numb$$%'
