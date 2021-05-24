@@ -1,0 +1,3 @@
+##This will return all IPS Rules on the Endpoint
+
+SELECT line FROM grep WHERE path = 'C:\Users\asus\Desktop\systemrules.txt' AND pattern = '(msg:')
