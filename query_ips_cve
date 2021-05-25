@@ -14,6 +14,6 @@ LTRIM(SPLIT(line, ' ', 6)) Destination_Port,
 SPLIT(substr(line,instr(line,'msg:"')+5,LENGTH(line)-instr(line,'msg:"')),'"',0) Rule
 FROM ips_rule_table)
 SELECT * FROM ips_rule_descr
-WHERE Rule LIKE 'CVE-$$Vuln-Numb$$'
+WHERE Rule LIKE '%CVE-$$Vuln-Numb$$%'
 
 
