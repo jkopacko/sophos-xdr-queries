@@ -1,0 +1,15 @@
+##This will return all endpoints that need a reboot to complete an upgrade/update for your Sophos Agent
+
+WITH rebootRequired AS (SELECT
+   CASE
+      WHEN data LIKE '1' THEN 'Yes'
+      ELSE 'No'
+   END AS RebootRequired
+FROM registry 
+WHERE path LIKE 'HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\VolatileFlags\RebootRequired'),
+
+rebootRequiredDate AS (SELECT datetime(CAST(data AS unsigned_bigint)/1000,'unixepoch','localtime') AS RequiredSince
+FROM registry 
+WHERE path LIKE 'HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\VolatileFlags\RebootRequiredSince')
+
+SELECT * FROM rebootRequired JOIN rebootRequiredDate
