@@ -1,0 +1,15 @@
+WITH regKey AS (SELECT
+CASE
+   WHEN data = '7' THEN 'NTLM is mitigated'
+   ELSE 'NTLM is enabled'
+END AS NTLM_Status
+FROM registry
+WHERE path = 'HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\restrictntlmindomain'),
+
+AD_CS AS (SELECT name
+FROM windows_optional_features
+WHERE caption LIKE 'Certificate Services Enrollment Server' OR 'Web Enrollment Services')
+
+SELECT name, NTLM_Status
+FROM AD_CS
+JOIN regKey
