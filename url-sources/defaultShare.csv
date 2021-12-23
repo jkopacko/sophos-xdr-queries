@@ -1,4 +1,4 @@
-name,
-ADMIN$
-IPC$
-C$
+description,name,path
+Remote Admin,ADMIN$,C:\WINDOWS
+Remote IPC,IPC$,
+Default Share,C$,C:\
