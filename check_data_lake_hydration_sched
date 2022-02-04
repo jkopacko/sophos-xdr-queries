@@ -1,0 +1,13 @@
+-- Check data lake hydration schedule
+
+SELECT name, query,
+CAST(datetime(last_executed, 'unixepoch') AS TEXT) AS 'Last Executed', interval AS 'Update Interval in Seconds',
+interval / 60 AS 'Update Interval Minutes',
+CASE denylisted
+WHEN 0 THEN
+CASE last_executed > 0
+WHEN 1 THEN (strftime('%s','now')-last_executed) / 60
+ELSE 'NOT_RUN_YET' END
+ELSE 'BLOCKED'
+END 'Last Execution (Minutes)', average_memory / 1024 AS 'KB'
+FROM osquery_schedule
