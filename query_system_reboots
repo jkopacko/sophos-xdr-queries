@@ -1,0 +1,16 @@
+SELECT DISTINCT
+      eventid,
+      CASE eventid
+      WHEN '41' THEN 'BugcheckCode: ' || JSON_EXTRACT(data, '$.EventData.BugcheckCode') || CHAR(10) || 'PowerButtonTimestamp: ' || JSON_EXTRACT(data, '$.EventData.PowerButtonTimestamp') || CHAR(10) || 'If both 0, check scenario 3.' || CHAR(10) || 'else-If PowerButton is not 0, check scenario 2.' || CHAR(10) || 'Else check scenario 1.' || CHAR(10) || 'Review Codes Here: https://docs.microsoft.com/en-us/windows/client-management/troubleshoot-event-id-41-restart' 
+      WHEN '1074' THEN JSON_EXTRACT(data, '$.EventData.param2') || ' was ' || JSON_EXTRACT(data, '$.EventData.param5') || ' from ' || JSON_EXTRACT(data, '$.EventData.param1') || ' by ' || JSON_EXTRACT(data, '$.EventData.param7')
+      WHEN '1076' THEN 'This machine restarted due to ' || JSON_EXTRACT(data, '$.EventData.param1') || 'and was first logged into by ' || JSON_EXTRACT(data, '$.EventData.param6')
+      WHEN '6005' THEN 'System Start Event Log Service Started'
+      WHEN '6006' THEN 'System Start Event Log Service Stopped - Improper Shutdown'
+      WHEN '6008' THEN 'Previous System Shutdown Unexpected at  ' || JSON_EXTRACT(data, '$.EventData.Data')
+      WHEN '6009' THEN 'OS Version Detected at System Startup is ' || JSON_EXTRACT(data, '$.EventData.Data')
+      WHEN '6013' THEN 'System Uptime is ' || (RTRIM(SPLIT(TRIM(JSON_EXTRACT(data, '$.EventData.Data'), ','), ',', 0))) || ' seconds'
+   END 'Event_Description',
+   datetime(time,'unixepoch') Date_Time
+   FROM sophos_windows_events swe
+WHERE eventid IN (41, 1074, 1076, 6005, 6006, 6008, 6009, 6013)
+AND time > strftime('%s','now','-90 days')
