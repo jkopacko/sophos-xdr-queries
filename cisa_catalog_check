@@ -1,0 +1,35 @@
+-- CISA_CatalogCheck
+-- @jkopacko - ver1 - 05/17/2022
+-- CISA Playbook | https://www.cisa.gov/sites/default/files/publications/Federal_Government_Cybersecurity_Incident_and_Vulnerability_Response_Playbooks_508C.pdf
+
+-- Define variable names 'vendorName', 'vendorName1', 'vendorName2' as STRING type
+-- If you wish to add more vendorNames, add 'OR vendorProject vendorName#'
+-- Grab JSON File
+WITH 
+   cisaExploitsJSON AS (
+      SELECT result 
+      FROM curl 
+      WHERE url = 'https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json'
+      ),
+-- Extract list of vulnerabilities
+   cisaExploitsFormatted AS (
+      SELECT key, value 
+      FROM cisaExploitsJSON, json_each(cisaExploitsJSON.result, '$.vulnerabilities')
+      ),
+-- Extract values into clumns
+   cisaExploitsTable (rowIndex, cveID, vendorProject, product, vulnerability, dateAdded, shortDescription, requiredAction) AS (
+      SELECT cisaExploitsFormatted.key rowIndex,
+            json_extract(cisaExploitsFormatted.value, '$.cveID') cveID,
+            json_extract(cisaExploitsFormatted.value, '$.vendorProject') vendorProject,
+            json_extract(cisaExploitsFormatted.value, '$.product') product,
+            json_extract(cisaExploitsFormatted.value, '$.vulnerabilityName') vulnerability,
+            json_extract(cisaExploitsFormatted.value, '$.dateAdded') AS dateAdded,
+            json_extract(cisaExploitsFormatted.value, '$.shortDescription') AS shortDescription,
+            json_extract(cisaExploitsFormatted.value, '$.requiredAction') AS requiredAction
+      FROM cisaExploitsFormatted
+      ORDER BY dateAdded DESC
+      )
+SELECT *
+FROM cisaExploitsTable
+WHERE (vendorProject LIKE '$$vendorName$$' OR vendorProject LIKE '$$vendorName1$$' OR vendorProject LIKE '$$vendorName2$$')
+ORDER BY vendorProject ASC
