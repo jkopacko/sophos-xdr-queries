@@ -1,5 +1,5 @@
-# sophos-edr-queries
-Live Discover Queries Written for Sophos EDR Agent
+# sophos-live discover-queries
+Live Discover Queries Written for Sophos EDR Agent and XDR Data Lake
 
 
 
