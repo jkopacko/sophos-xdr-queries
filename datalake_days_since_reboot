@@ -1,0 +1,11 @@
+-- With variable ‘YYYY-MM-DD’ as STRING type (ex: 2022-05-17)
+
+SELECT
+meta_hostname,
+DATE_FORMAT(FROM_UNIXTIME(MAX(meta_boot_time)), '%Y-%m-%d') lastRebootTime,
+abs(date_diff('day', DATE '$$YYYY-MM-DD$$', DATE (DATE_FORMAT(FROM_UNIXTIME(MAX(meta_boot_time)), '%Y-%m-%d')))) daysSinceReboot
+FROM XDR_DATA
+GROUP BY
+meta_hostname
+ORDER BY
+lastRebootTime ASC
