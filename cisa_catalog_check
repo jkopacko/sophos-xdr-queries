@@ -1,5 +1,5 @@
 -- CISA_CatalogCheck
--- @jkopacko - ver1 - 05/17/2022
+-- @jkopacko - ver1.1 - 05/17/2022
 -- CISA Playbook | https://www.cisa.gov/sites/default/files/publications/Federal_Government_Cybersecurity_Incident_and_Vulnerability_Response_Playbooks_508C.pdf
 
 -- Define variable names 'vendorName', 'vendorName1', 'vendorName2' as STRING type
@@ -16,7 +16,7 @@ WITH
       SELECT key, value 
       FROM cisaExploitsJSON, json_each(cisaExploitsJSON.result, '$.vulnerabilities')
       ),
--- Extract values into clumns
+-- Extract values into columns
    cisaExploitsTable (rowIndex, cveID, vendorProject, product, vulnerability, dateAdded, shortDescription, requiredAction) AS (
       SELECT cisaExploitsFormatted.key rowIndex,
             json_extract(cisaExploitsFormatted.value, '$.cveID') cveID,
