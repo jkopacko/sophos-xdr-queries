@@ -1,0 +1,34 @@
+/* Source: https://www.kolide.com/blog/how-to-find-a-mac-s-manufacture-date-using-osquery#creating-a-lookup-table-using-common-table-expressions */
+
+WITH
+serial_partial AS (
+  SELECT
+    SUBSTR(hardware_serial,4,1) AS char_4,
+    SUBSTR(hardware_serial,5,1) AS char_5
+  FROM system_info
+),
+mac_manufacture_year(char_4,year,offset) AS (
+VALUES
+('C','2020',0),('D','2020',26),('F','2021',0),('G','2021',26),('H','2022',0),('J','2022',26),('K','2013',0),('L','2013',26),('M','2014',0),('N','2014',26),('P','2015',0),('Q','2015',26),('R','2016',0),('S','2016',26),('T','2017',0),('V','2017',26),('W','2018',0),('X','2018',26),('Y','2019',0),('Z','2019',26)
+),
+mac_manufacture_week(char_5,week) AS (
+VALUES
+('1',1),('2',2),('3',3),('4',4),('5',5),('6',6),('7',7),('8',8),('9',9),('C',10),('D',11),('F',12),('G',13),('H',14),('J',15),('K',16),('M',17),('N',18),('L',19),('P',20),('Q',21),('R',22),('T',23),('V',24),('W',25),('X',26),('Y',27)
+),
+merge_data AS (
+  SELECT
+    year,
+    (week + offset) AS week
+  FROM serial_partial
+  JOIN mac_manufacture_year USING(char_4)
+  JOIN mac_manufacture_week USING(char_5)
+),
+date_modified AS (
+  SELECT
+    year || '-01-01' AS year_start,
+    ('+' || (week * 7) || ' days') AS offset_days
+  FROM merge_data
+)
+SELECT *,
+  date(year_start,offset_days) AS manufacture_date
+FROM date_modified;
