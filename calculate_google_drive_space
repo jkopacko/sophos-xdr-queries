@@ -1,0 +1,12 @@
+/* I cannot find the source of this query */
+
+SELECT SUM(file.size) AS gdrive_size,
+  (SELECT (mounts.blocks * mounts.blocks_size)
+   FROM mounts
+   WHERE PATH = '/') AS total_disk_size,
+       (100.0 * SUM(file.size) /
+          (SELECT (mounts.blocks * mounts.blocks_size)
+           FROM mounts
+           WHERE PATH = '/')) AS gdrive_percentage_used
+FROM FILE
+WHERE file.path LIKE '/Users/%/Google Drive/%%';
