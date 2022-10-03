@@ -1,0 +1,11 @@
+Name, Data
+FilterAdministratorToken, 0
+EnableUIADesktopToggle, 0
+ConsentPromptBehaviorAdmin, 5
+ConsentPromptBehaviorUser, 3
+EnableInstallerDetection, 0
+ValidateAdminCodeSignatures, 0
+EnableSecureUIAPaths, 1
+EnableLUA, 1
+PromptOnSecureDesktop, 1
+EnableVirtualization, 1
