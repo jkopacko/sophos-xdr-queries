@@ -1,0 +1,71 @@
+--Domain Profile Information
+WITH domain (domainProfileStatus, domainDropLog, domainSuccesLog) AS ( 
+    SELECT
+            CASE
+                WHEN data = 1 THEN 'Enabled'
+                ELSE 'Disabled'  
+            END,
+    CAST((SELECT
+            CASE
+                WHEN data = 1 THEN 'Enabled'
+                ELSE 'Disabled'
+            END
+        FROM registry
+        WHERE key = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\DomainProfile\Logging' AND name = 'LogDroppedPackets') AS TEXT),
+    CAST((SELECT
+            CASE
+                WHEN data = 1 THEN 'Enabled'
+                ELSE 'Disabled'
+            END
+        FROM registry
+        WHERE key = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\DomainProfile\Logging' AND name = 'LogSuccessfulConnections') AS TEXT)
+    FROM registry
+    WHERE key = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\DomainProfile' AND name = 'EnableFirewall'),
+--Public Profile Information
+public (publicProfileStatus, publicDropLog, publicSuccessLog) AS (
+    SELECT
+        CASE
+            WHEN data = 1 THEN 'Enabled'
+            ELSE 'Disabled'
+        END,
+    CAST((SELECT
+            CASE
+                WHEN data = 1 THEN 'Enabled'
+                ELSE 'Disabled'
+            END
+        FROM registry
+        WHERE key = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\PublicProfile\Logging' AND name = 'LogDroppedPackets') AS TEXT),
+    CAST((SELECT
+            CASE
+                WHEN data = 1 THEN 'Enabled'
+                ELSE 'Disabled'
+            END
+        FROM registry
+        WHERE key = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\PublicProfile\Logging' AND name = 'LogSuccessfulConnections') AS TEXT)
+    FROM registry
+    WHERE key = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\PublicProfile' AND name = 'EnableFirewall'),
+--Private Profile Information
+private (privateProfileStatus, privateDropLog, privateSuccessLog) AS (
+    SELECT 
+        CASE
+            WHEN data = 1 THEN 'Enabled'
+            ELSE 'Disabled'
+        END,
+        CAST((SELECT
+                CASE
+                    WHEN data = 1 THEN 'Enabled'
+                    ELSE 'Disabled'
+                END
+            FROM registry
+            WHERE key = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\StandardProfile\Logging' AND name = 'LogDroppedPackets') AS TEXT),
+        CAST((SELECT
+                CASE
+                    WHEN data = 1 THEN 'Enabled'
+                    ELSE 'Disabled'
+                END
+            FROM registry
+            WHERE key = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\StandardProfile\Logging' AND name = 'LogSuccessfulConnections') AS TEXT)
+    FROM registry
+    WHERE key = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\StandardProfile' AND name = 'EnableFirewall')
+--Merge Firewall Information
+SELECT * FROM domain JOIN public JOIN private
