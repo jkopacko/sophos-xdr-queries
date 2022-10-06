@@ -1,0 +1,31 @@
+--Read Log Files
+WITH firewallLogs AS(
+    SELECT *
+    FROM grep
+    WHERE path = 'C:\Windows\System32\LogFiles\Firewall\pfirewall.log'
+    AND pattern = '$$YYYY-MM-DD$$'),
+--Parse Log File Line by Line
+    firewallLogsDetail (date, time, action, protocol, srcIP, dstIP, srcPort, dstPort, size, tcpFlags, tcpSyn, tcpPack, tcpWin, icmpType, icmpcode, info, path, pid) AS (
+        SELECT SPLIT(line, ' ', 0),
+            CAST(SPLIT(line, ' ', 1) AS VARCHAR),
+            SPLIT(line, ' ', 2),
+            SPLIT(line, ' ', 3),
+            SPLIT(line, ' ', 4),
+            SPLIT(line, ' ', 5),
+            SPLIT(line, ' ', 6),
+            SPLIT(line, ' ', 7),
+            SPLIT(line, ' ', 8),
+            SPLIT(line, ' ', 9),
+            SPLIT(line, ' ', 10),
+            SPLIT(line, ' ', 11),
+            SPLIT(line, ' ', 12),
+            SPLIT(line, ' ', 13),
+            SPLIT(line, ' ', 14),
+            SPLIT(line, ' ', 15),
+            SPLIT(line, ' ', 16),
+            SPLIT(line, ' ', 17)
+        FROM firewallLogs)
+--
+SELECT date, time, pid, action, protocol, srcIP, srcPort, dstIP, dstPort, size, tcpFlags, tcpSyn, tcpPack, tcpWin, icmpType, icmpcode, info, path 
+FROM firewallLogsDetail
+ORDER BY time ASC
