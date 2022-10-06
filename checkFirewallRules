@@ -1,0 +1,14 @@
+--FirewallRules
+WITH firewallRules AS (
+    SELECT name,
+    data,
+    datetime(mtime, 'unixepoch', 'localtime') AS modifiedTimeStamp
+    FROM registry
+    WHERE key = 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\FirewallRules'),
+firewallRulesDetails (name, version, action, isActive, direction, description) AS (
+    SELECT name, SPLIT(data,'|',0), REPLACE(SPLIT(data,'|',1),'Action=',''), REPLACE(SPLIT(data,'|',2),'Active=',''), REPLACE(SPLIT(data,'|',3),'Dir=',''), REPLACE(substring(data,38,(length(data))),'|',' ')
+    FROM firewallRules WHERE data != '')
+SELECT name, action, isActive, direction, description FROM firewallRulesDetails
+WHERE isActive = 'TRUE'
+AND direction = 'In'
+ORDER BY name ASC
