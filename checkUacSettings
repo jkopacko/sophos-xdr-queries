@@ -1,0 +1,26 @@
+WITH
+    gitHubRepo(Line, str) AS (
+        SELECT '', (SELECT result from curl where url = 'https://raw.githubusercontent.com/jkopacko/sophos-xdr-queries/main/url-sources/user_account_control.csv') ||char(10)
+        UNION ALL
+        SELECT substr(str, 0, instr(str, char(10) )), substr(str, instr(str, char(10) )+1) FROM gitHubRepo WHERE str!=''
+    ),
+    gitHubTable (name, data, reference) AS (
+        SELECT SPLIT(Line,',',0) name, SPLIT(Line,',',1) data, SPLIT(Line,',',2) reference
+        FROM gitHubRepo WHERE Line != ''
+    ),
+    localReg (name, data, modifiedTimeStamp) AS (
+        SELECT name, data, datetime(mtime, 'unixepoch', 'localtime') AS modifiedTimeStamp
+        FROM registry
+        WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
+        AND type = 'REG_DWORD'  
+    )
+SELECT localReg.name,
+localReg.modifiedTimeStamp,
+CASE
+    WHEN localReg.data <> gitHubTable.data THEN 'Not using default settings'
+    ELSE 'Using default settings'
+END AS uacFeedback,
+gitHubTable.reference
+FROM localReg
+INNER JOIN gitHubTable
+ON localReg.name = gitHubTable.name
