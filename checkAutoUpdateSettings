@@ -1,0 +1,96 @@
+WITH autoUpdate (autoReboot, rebootTime,autoCheck, autoCheckInterval, autoUpdate,autoUpdateOptions,autoMaintenance, scheduledInstallDay,scheduledInstallTime,scheduledInstallWeek,autoInstallMinorUpdates) AS (SELECT
+        CASE
+            WHEN data = 1 THEN 'Enabled'
+            ELSE 'Disabled'  
+        END,
+            CAST((SELECT data || ' minutes after update complete'
+                FROM registry
+                WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\Au' AND name = 'AlwaysAutoRebootAtScheduledTimeMinutes') AS VARCHAR),
+            CAST((SELECT CASE
+                            WHEN data = 1 THEN 'Enabled'
+                            ELSE 'Disabled'
+                        END
+                FROM registry
+                WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\Au' AND name = 'DetectionFrequencyEnabled') AS VARCHAR),
+            CAST((SELECT 'Every ' || data || ' hours'
+                FROM registry
+                WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\Au' 
+                AND name = 'DetectionFrequency') AS VARCHAR),
+            CAST((SELECT CASE
+                            WHEN data = 0 THEN 'Enabled'
+                            ELSE 'Disabled'
+                END
+                FROM registry
+                WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\Au' AND name = 'NoAutoUpdate') AS VARCHAR),
+            CAST((SELECT CASE
+                            WHEN data = 1 THEN 'Keep up to date is disabled'
+                            WHEN data = 2 THEN 'Notify of download and installation'
+                            WHEN data = 3 THEN 'Automatically download and notify of installation'
+                            WHEN data = 4 THEN 'Automatically download and perform scheduled installation'
+                            ELSE NULL
+                        END
+                FROM registry
+                WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\Au' AND name = 'AUOptions') AS VARCHAR),
+            CAST((SELECT CASE
+                            WHEN data = 0 THEN 'Enabled'
+                            ELSE 'Disabled'
+                        END
+                FROM registry
+                WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\Au' AND name = 'AutomaticMaintenanceEnabled') AS VARCHAR),
+            CAST((SELECT CASE
+                            WHEN data = 0 THEN 'Everyday'
+                            WHEN data = 1 THEN 'Sunday'
+                            WHEN data = 2 THEN 'Monday'
+                            WHEN data = 3 THEN 'Tuesday'
+                            WHEN data = 4 THEN 'Wednesday'
+                            WHEN data = 5 THEN 'Thursday'
+                            WHEN data = 6 THEN 'Friday'
+                            WHEN data = 7 THEN 'Saturday'
+                            ELSE NULL
+                        END
+                FROM registry
+                WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\Au' AND name = 'ScheduledInstallDay') AS VARCHAR),
+                CAST((SELECT 
+                        CASE
+                           WHEN data = 0 THEN (data = 12) || ' AM'
+                           WHEN data = 1 THEN data || ' AM'
+                           WHEN data = 2 THEN data || ' AM'
+                           WHEN data = 3 THEN data || ' AM'
+                           WHEN data = 4 THEN data || ' AM'
+                           WHEN data = 5 THEN data || ' AM'
+                           WHEN data = 6 THEN data || ' AM'
+                           WHEN data = 7 THEN data || ' AM'
+                           WHEN data = 8 THEN data || ' AM'
+                           WHEN data = 9 THEN data || ' AM'
+                           WHEN data = 10 THEN data || ' AM'
+                           WHEN data = 11 THEN data || ' AM'
+                           WHEN data = 12 THEN data || ' PM'
+                           WHEN data = 13 THEN (data=1) || ' PM'
+                           WHEN data = 14 THEN (data=2) || ' PM'
+                           WHEN data = 15 THEN (data=3) || ' PM'
+                           WHEN data = 16 THEN (data=4) || ' PM'
+                           WHEN data = 17 THEN (data=5) || ' PM'
+                           WHEN data = 18 THEN (data=6) || ' PM'
+                           WHEN data = 19 THEN (data=7) || ' PM'
+                           WHEN data = 20 THEN (data=8) || ' PM'
+                           WHEN data = 21 THEN (data=9) || ' PM'
+                           WHEN data = 22 THEN (data=10) || ' PM'
+                           WHEN data = 23 THEN (data=11) || ' PM'
+                           ELSE NULL
+                           END
+                FROM registry
+                WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\Au' AND name = 'ScheduledInstallTime') AS VARCHAR),
+            (SELECT name
+                FROM registry
+                WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\Au' 
+                AND name LIKE 'ScheduledInstall%Week'),
+            CAST((SELECT CASE
+                            WHEN data = 1 THEN 'Silently install minor updates'
+                            ELSE 'Tread minor update like other updates'
+                        END
+                FROM registry
+                WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\Au' AND name = 'AutoInstallMinorUpdates') AS VARCHAR)
+    FROM registry 
+    WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\Au'
+    AND name = 'AlwaysAutoRebootAtScheduledTime')
+SELECT * FROM autoUpdate
