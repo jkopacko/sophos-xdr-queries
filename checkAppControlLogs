@@ -1,4 +1,6 @@
--- VARIABLE TYPE STRING "YYYY-MM"
+-- Variable Type String
+-- Variable Name YYYY-MM
+-- Ex: 2022-10
 
 WITH sspLog AS (
    SELECT *
@@ -10,4 +12,5 @@ logDetails (timestamp, description) AS (
          CAST(SPLIT(line, ']', 1) AS VARCHAR)
         FROM sspLog)
 SELECT * FROM logDetails
+WHERE description LIKE '%controlled app%'
 ORDER BY timestamp DESC
