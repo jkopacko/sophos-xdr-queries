@@ -1,0 +1,18 @@
+WITH policyStamp (stamp) AS 
+(SELECT data
+FROM registry
+WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Sophos\Management\Policy\ApplicationControl\' 
+AND name = 'latest'),
+policyFullStamp AS (
+SELECT 'HKEY_LOCAL_MACHINE\SOFTWARE\Sophos\Management\Policy\ApplicationControl\' || stamp
+FROM policyStamp),
+appControl (name, status) AS (
+SELECT name, 
+CASE
+   WHEN data = 1 THEN 'Enabled'
+   WHEN data = 0 THEN 'Disabled'
+   ELSE data
+END
+FROM registry
+WHERE key = (SELECT * FROM policyFullStamp))
+SELECT * FROM appControl
