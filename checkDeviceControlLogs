@@ -1,0 +1,16 @@
+-- Variable Type String
+-- Variable Name YYYY-MM
+-- Ex: 2022-08
+
+WITH sspLog AS (
+   SELECT *
+   FROM grep
+   WHERE path = 'C:\ProgramData\Sophos\Endpoint Defense\Logs\SSP.log'
+   AND pattern = '$$YYYY-MM$$'),
+logDetails (timestamp, description) AS (
+   SELECT datetime(CAST(SPLIT(line, ' ', 0) AS VARCHAR),'localtime'),
+         CAST(SPLIT(line, ']', 1) AS VARCHAR)
+        FROM sspLog)
+SELECT * FROM logDetails
+WHERE description LIKE '%DeviceControl%'
+ORDER BY timestamp DESC
