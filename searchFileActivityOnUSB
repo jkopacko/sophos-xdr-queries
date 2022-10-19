@@ -1,0 +1,28 @@
+-- 36 hour interval
+
+SELECT datetime(time,'unixepoch','localtime') AS time,
+CASE eventType
+   WHEN 0 THEN 'Created'
+   WHEN 1 THEN 'Renamed'
+   WHEN 2 THEN 'Deleted'
+   WHEN 3 THEN 'Modified'
+   WHEN 4 THEN 'Hardlink Created'
+   WHEN 5 THEN 'Modified'
+   WHEN 6 THEN 'Permissions Modified'
+   WHEN 7 THEN 'Ownership Modified'
+   WHEN 8 THEN 'Binary File Mapped'
+END AS Action,
+pid,
+datetime(processStartTime,'unixepoch','localtime') AS processStartTime,
+path,
+file,
+--pathtype | https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/fltuserstructures/ne-fltuserstructures-_flt_filesystem_type | is this useful?
+datetime(creationTime,'unixepoch','localtime') AS creationTime,
+datetime(lastAccessTime,'unixepoch','localtime') AS lastAccess,
+datetime(lastWriteTime,'unixepoch','localtime') AS lastWrite,
+datetime(changeTime,'unixepoch','localtime') AS changeTime
+FROM sophos_file_journal
+WHERE pathname LIKE '\Device\HarddiskVolume%%\%'
+AND time > STRFTIME('%s',"NOW",'-36 HOUR')
+AND time < STRFTIME('%s',"NOW",'-0 HOUR')
+ORDER BY TIME DESC
