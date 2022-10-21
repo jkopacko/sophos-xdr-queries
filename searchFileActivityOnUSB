@@ -1,4 +1,5 @@
 -- 36 hour interval
+-- Very resource intensive (tried other USB query in repo)
 
 SELECT datetime(time,'unixepoch','localtime') AS time,
 CASE eventType
