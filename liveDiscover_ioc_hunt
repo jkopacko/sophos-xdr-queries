@@ -1,0 +1,78 @@
+--v3 JK
+
+WITH IOC_HUNT_BY_TYPE AS (
+
+WITH IOC_LIST (ThreatActor, IOC_TYPE, Indicator) AS (
+VALUES
+('JK_Test','MD5','21f8ec81b5cff60553b2062796b369d4'),
+('JK_Test','MD5','881Af16E2C0B6028A15781D1D9089A86'),
+('JK_Test','MD5','1c8cdefcd89d74ffcc8d326f6b657bc0'),
+('JK_Test','sha256','b4ceaecbabd23e1c737d287f1994025bf19109d8c70ae77a29318f2b94600d68'),
+('JK_Test','sha256','8c3e4d27217bf6fbf13a41502195b21bf5b81482f3cc448c52630226840f1fb0'),
+('Test_JK','IP','204.79.197.239 '),
+('Test_JK','IP','40.126.29.7'),
+('Test_JK','IP','8.8.8.8'),
+('XDR_Lab','Domain','4.sophosxl.net'),
+('XDR_Lab','Domain','edge.microsoft.com'),
+('XDR_lab','Domain','pksproddatastorewus116.blob.core.windows.net')
+)
+/* Search the MD5 data for matches */
+SELECT DISTINCT
+CASE h.path NOT NULL
+WHEN 1 THEN '!! DETECTED IOC --> ' || h.path
+ELSE 'IOC NOT FOUND'
+END Result,
+ThreatActor, IOC_TYPE, Indicator
+FROM IOC_LIST ioc JOIN sophos_process_journal spj ON 1
+LEFT JOIN hash h on h.path = spj.path AND h.md5 = LOWER (ioc.Indicator)
+WHERE ioc.ioc_type = 'MD5'
+
+UNION ALL 
+
+/* Search the 256 data for matches */
+SELECT DISTINCT 
+CASE spj.SHA256 NOT NULL 
+WHEN 1 THEN '!! DETECTED IOC --> ' || spj.path 
+ELSE 'IOC NOT FOUND' 
+END Result,
+ThreatActor, IOC_TYPE, Indicator
+FROM IOC_LIST ioc LEFT JOIN sophos_process_journal spj ON spj.SHA256 = LOWER (ioc.indicator) AND spj.time > strftime('%s','now','-7 days')
+WHERE ioc.ioc_type = 'sha256'
+-- Merge
+UNION ALL 
+/* Search the Process and Filename matches
+SELECT DISTINCT
+CASE sfj.file NOT NULL
+WHEN 1 THEN 'DETECTED IOC >' || sfj.file
+ELSE 'IOC NOT FOUND'
+END Result,
+ThreatActor, IOC_TYPE, Indicator
+FROM IOC_LIST ioc LEFT JOIN sophos_file_journal sfj on LOWER (sfj.file) = LOWER (ioc.indicator)
+WHERE ioc.ioc_type = 'Filename'
+UNION ALL
+*/
+--Search the IP Matches
+SELECT DISTINCT
+CASE sij.SophosPID NOT NULL
+WHEN 1 THEN '!! DETECTED IOC --> ' || spj.cmdLine
+ELSE 'IOC NOT FOUND'
+END Result,
+ThreatActor, IOC_TYPE, Indicator
+FROM IOC_LIST ioc LEFT JOIN sophos_ip_journal sij ON sij.destination = ioc.indicator AND sij.time > strftime('%s','now','-7 days')
+JOIN sophos_process_journal spj ON spj.SophosPID = sij.SophosPID
+WHERE ioc.ioc_type = 'IP'
+--Merge 
+UNION ALL
+--Search the Domain Matches 
+SELECT DISTINCT
+CASE sdj.SophosPID NOT NULL
+WHEN 1 THEN '!! DETECTED IOC --> ' || spj.cmdLine
+ELSE 'IOC NOT FOUND'
+END Result,
+ThreatActor, IOC_TYPE, Indicator
+FROM IOC_LIST ioc LEFT JOIN sophos_dns_journal sdj ON sdj.name = ioc.indicator AND sdj.time > strftime('%s','now','-7 days')
+JOIN sophos_process_journal spj ON spj.SophosPID = sdj.SophosPID
+WHERE ioc.ioc_type = 'Domain'
+)
+SELECT * FROM IOC_HUNT_BY_TYPE
+WHERE result <> 'IOC NOT FOUND'
