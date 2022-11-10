@@ -1,6 +1,8 @@
-#You will need to set a variable domainName and then be able to search for any logs with the user input string
+-- Variable domainName as STRING
+-- Variable day1 as DATE
+-- Variable day2 as DATE
 
-SELECT datetime(sophos_dns_journal.time, 'unixepoch', 'localtime'), 
+SELECT datetime(sophos_dns_journal.time, 'unixepoch', 'localtime') as timeStamp,
 sophos_dns_journal.sophosPID,
 sophos_process_journal.cmdline,
 sophos_dns_journal.name 
@@ -8,3 +10,4 @@ FROM sophos_dns_journal
 JOIN sophos_process_journal
 WHERE sophos_dns_journal.name LIKE '%$$domainName$$%'
 AND sophos_process_journal.sophosPID = sophos_dns_journal.sophosPID
+AND (sophos_dns_journal.time > '$$day1$$' AND sophos_dns_journal.time < '$$day2$$')
