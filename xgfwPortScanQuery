@@ -1,0 +1,33 @@
+/*
+
+-- Credit to https://community.sophos.com/members/marcel for creating the bulk of this query 
+
+  += Descriptive name: portsSeenThreshold
+  += Variable type: String
+  += Value: use 1 or more 
+  += version 3.0 - 2/22/23 
+  
+*/
+
+
+--Creates a table of firewall logs with appliance access attempts
+WITH ipPorts AS (
+ SELECT distinct device_serial_id AS deviceSerial, device_model AS deviceModel, src_ip AS sourceIP, dst_port, in_interface AS interface, CAST(ingestion_time AS VARCHAR) AS scanTimeStamp
+   FROM xgfw_data
+   WHERE log_type = 'Firewall' 
+     AND log_component = 'Appliance Access'
+     ),
+     
+--Counts the ports and sorts the values from the above table
+   ipPortCount AS (
+      SELECT deviceSerial, deviceModel, sourceIP, COUNT(dst_port) AS portCount, array_join(array_agg(dst_port), ',') AS portList, 
+        interface, scanTimeStamp
+      FROM ipPorts
+      GROUP BY sourceIP, interface, scanTimeStamp, deviceModel, deviceSerial
+   )
+--Return the data based on a minimum count value
+SELECT 
+   'PORTSCAN DETECTED' AS detection, scanTimeStamp, sourceIP, portCount, portList, interface, deviceSerial, deviceModel
+FROM ipPortCount
+WHERE portCount >= $$portsSeenThreshold$$
+ORDER BY scanTimeStamp DESC
