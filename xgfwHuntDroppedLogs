@@ -1,0 +1,31 @@
+/*
+
+-- Credit to https://community.sophos.com/members/marcel for creating the bulk of this query 
+
+  += Descriptive names: fw_rule_id, src_ip, dst_ip, dst_port
+  += Variable type: String
+  += Value: wildcards are supported
+  += version 1.0 - 2/26/23
+  += Note: if you change '=' to '!=', it can exclude seeing specific entries too
+  
+*/
+
+SELECT
+    "timestamp",
+    log_type,
+    log_subtype,
+    log_component,
+    fw_rule_id,
+    src_ip,
+    dst_ip,
+    dst_port,
+    coalesce(bytes_sent, 0) + coalesce(bytes_received, 0) AS bytes
+FROM
+    xgfw_data
+WHERE
+   COALESCE(CAST(fw_rule_id AS VARCHAR ),'') = '$$fw_rule_id$$'
+   AND COALESCE(CAST(src_ip AS VARCHAR ),'') = '$$src_ip$$'
+   AND COALESCE(CAST(dst_ip AS VARCHAR ),'') = '$$dst_ip$$'
+   AND COALESCE(CAST(dst_port AS VARCHAR ),'') = '$$dst_port$$'
+ORDER BY
+    "timestamp" DESC
