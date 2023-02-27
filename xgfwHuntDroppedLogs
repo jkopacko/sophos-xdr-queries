@@ -1,6 +1,6 @@
 /*
 
--- Credit to https://community.sophos.com/members/marcel for creating the bulk of this query 
+-- author: jkopacko
 
   += Descriptive names: fw_rule_id, src_ip, dst_ip, dst_port
   += Variable type: String
