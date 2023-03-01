@@ -1,0 +1,31 @@
+/*
+
+-- author: jkopacko
+
+  += Descriptive names: fw_rule_id, src_ip
+  += Variable type: String
+  += Value: wildcards are supported
+  += version 1.0 - 03/01/23
+  
+*/
+
+SELECT
+    "timestamp",
+    log_type,
+    log_subtype,
+    log_component,
+    fw_rule_id,
+    src_ip,
+    domain,
+    url,
+    http_category,
+    dst_ip,
+    dst_port,
+    coalesce(bytes_sent, 0) + coalesce(bytes_received, 0) AS bytes
+FROM
+    xgfw_data
+WHERE
+   COALESCE(CAST(fw_rule_id AS VARCHAR ),'') = '$$fw_rule_id$$'
+   AND COALESCE(CAST(src_ip AS VARCHAR ),'') = '$$src_ip$$'
+ORDER BY
+    "timestamp" DESC
