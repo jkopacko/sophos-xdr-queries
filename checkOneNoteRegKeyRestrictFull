@@ -1,0 +1,8 @@
+SELECT name, datetime(mtime,'unixepoch','localtime') as modifiedTime,
+   CASE 
+   WHEN DATA = '1' THEN 'Enabled'
+   WHEN DATA = '0' THEN 'Disabled'
+   ELSE 'key not found'
+   END AS Status
+FROM registry WHERE path LIKE 'HKEY_USERS\%\Software\Policies\Microsoft\office\%\onenote\options\%%'
+AND name = 'disableembeddedfiles'
