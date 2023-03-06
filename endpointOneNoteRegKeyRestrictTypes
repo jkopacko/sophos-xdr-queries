@@ -1,0 +1,6 @@
+SELECT name, 
+REPLACE(data, ';', ' ') AS fileTypes, 
+datetime(mtime,'unixepoch','localtime') as modifiedTime
+FROM registry 
+WHERE path LIKE 'HKEY_USERS\%\Software\Policies\Microsoft\office\%\onenote\options\embeddedfileopenoptions\%%'
+AND name = 'blockedextensions'
