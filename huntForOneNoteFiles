@@ -1,0 +1,32 @@
+--Define VARIABLE starTime as TYPE date
+
+SELECT sfp.sha256,
+f.path,
+f.filename,
+datetime(f.atime,'unixepoch','localtime') AS Last_Accessed,
+datetime(f.mtime,'unixepoch','localtime') AS Last_Modified,
+datetime(f.ctime,'unixepoch','localtime') AS Creation_Time
+FROM file f
+LEFT JOIN sophos_file_properties sfp
+	ON f.path = sfp.path
+WHERE f.filename LIKE '%.one'
+AND  (f.path LIKE 'C:\Users\Public\%%'
+    OR f.path LIKE 'C:\Users\%\Downloads\%'
+    OR f.path LIKE 'C:\Users\%\Documents\%'
+    OR f.path LIKE 'C:\Users\%\Desktop\%'
+    OR f.path LIKE 'C:\Users\%\Music\%%'
+    OR f.path LIKE 'C:\Users\%\Pictures\%%'
+    OR f.path LIKE 'C:\Users\%\AppData\Local\Temp\%'
+    OR f.path LIKE 'C:\Users\%\AppData\Local\Microsoft\Windows\INetCache\Content.Outlook\%')
+    --Can add more search locations but will task the service further
+    /*
+    OR f.path LIKE 'C:\ProgramData\%'
+    OR f.path LIKE 'C:\Perflogs\%'
+    OR f.path LIKE 'C:\Intel\%'
+    OR f.path LIKE 'C:\Temp\%'
+    OR f.path LIKE 'C:\Windows\%'
+    OR f.path LIKE 'C:\Windows\Temp\%'
+    OR f.path LIKE 'C:\Windows\System32\%'
+    OR f.path LIKE 'C:\Windows\SysWOW64\%')
+    */
+AND datetime(f.ctime,'unixepoch','localtime') > $$startTime$$ 
