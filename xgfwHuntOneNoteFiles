@@ -1,0 +1,17 @@
+SELECT timestamp,
+log_type,
+log_component,
+log_subtype,
+severity,
+user_name,
+src_ip,
+dst_ip,
+dst_port,
+app_name,
+app_category,
+app_risk,
+url,
+download_file_name,
+download_file_type
+FROM xgfw_data
+WHERE download_file_name LIKE '%.one'
