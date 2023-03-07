@@ -1,4 +1,12 @@
---Define VARIABLE starTime as TYPE date
+/* 
+-- author: jkopacko
+
+  += Descriptive names: startTime
+  += Variable type: Date
+  += Value: wildcards work but discouraged due to resource demand
+  += version 1.0 - 03/06/2023
+
+*/
 
 SELECT sfp.sha256,
 f.path,
@@ -29,4 +37,4 @@ AND  (f.path LIKE 'C:\Users\Public\%%'
     OR f.path LIKE 'C:\Windows\System32\%'
     OR f.path LIKE 'C:\Windows\SysWOW64\%')
     */
-AND datetime(f.ctime,'unixepoch','localtime') > $$startTime$$ 
+AND datetime(f.ctime,'unixepoch','localtime') > $$startTime$$
