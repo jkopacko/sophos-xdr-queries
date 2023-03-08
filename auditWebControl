@@ -1,0 +1,8 @@
+SELECT name, 
+--policyLastModifiedDate will reflect the last modified date of the policy in the Central UI
+substr(data,0,9) AS policyLastModifiedDate, 
+--lastModifiedTime will reflect the last registry update
+datetime(mtime, 'unixepoch', 'localtime') as lastModifiedTime
+FROM registry
+WHERE key = 'HKEY_LOCAL_MACHINE\SOFTWARE\Sophos\Management\Policy\WebControl\' 
+AND name = 'latest'
