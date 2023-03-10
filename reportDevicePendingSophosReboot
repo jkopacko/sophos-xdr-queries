@@ -1,4 +1,12 @@
-##This will return all endpoints that need a reboot to complete an upgrade/update for your Sophos Agent
+/*
+--author: @jkopacko
++= Descriptive names: N/A
++= Variable type: N/A
++= Value: N/A
++= Version 1.0 - 08/10/22
++= Query type: Live Discover
++= OS Support: Windows
+*/
 
 WITH rebootRequired AS (SELECT
    CASE
