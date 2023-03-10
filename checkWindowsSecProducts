@@ -1,3 +1,0 @@
-SELECT type, name, state
-FROM windows_security_products
-WHERE state = 'On'
