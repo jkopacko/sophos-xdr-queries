@@ -1,4 +1,12 @@
-/* I cannot find the original source I saw this in */
+/*
+--author: Cannot find source 
++= Descriptive names: N/A
++= Variable type: N/A
++= Value: N/A
++= Version 1.0 - N/A
++= Query type: Live Discover
++= OS Support: macOS
+*/
 
 SELECT
   f.path,
