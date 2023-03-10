@@ -1,9 +1,13 @@
--- CISA_CatalogCheck
--- @jkopacko - ver1.2 - 05/17/2022
--- CISA Playbook | https://www.cisa.gov/sites/default/files/publications/Federal_Government_Cybersecurity_Incident_and_Vulnerability_Response_Playbooks_508C.pdf
-
--- Define variable names 'vendorName', 'vendorName1', 'vendorName2' as STRING type
--- If you wish to add more vendorNames, add 'OR vendorProject vendorName#'
+/*
+-- author: jkopacko
+  += Descriptive names: vendorName, vendorName1, vendorName2 (and more if required)
+  += Variable type: String
+  += Value: Cisco, VMware, Apache (and many more)
+  += Version 1.0 - 05/17/22
+  += Query type: Live Discover - choose only ONE machine 
+  += OS Support: Windows
+  += Source: CISA Playbook | https://www.cisa.gov/sites/default/files/publications/Federal_Government_Cybersecurity_Incident_and_Vulnerability_Response_Playbooks_508C.pdf
+*/
 
 -- Grab JSON File
 WITH 
@@ -30,8 +34,9 @@ WITH
       FROM cisaExploitsFormatted
       ORDER BY dateAdded DESC
       )
--- Return all results like your variable names (ex: VMware, Microsoft, Apache)
+-- Return all results like your variable names 
 SELECT *
 FROM cisaExploitsTable
+--You can add as many vendorNames as you like with the code <OR vendorProject LIKE '$$vendorName#$$'> at the end of line 41
 WHERE (vendorProject LIKE '$$vendorName$$' OR vendorProject LIKE '$$vendorName1$$' OR vendorProject LIKE '$$vendorName2$$')
 ORDER BY vendorProject ASC
