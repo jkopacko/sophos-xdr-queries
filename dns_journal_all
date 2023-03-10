@@ -1,9 +1,0 @@
-#This will return all logs in the DNS journal and corresponding PID
-
-SELECT datetime(sophos_dns_journal.time, 'unixepoch', 'localtime'), 
-sophos_dns_journal.sophosPID,
-sophos_process_journal.cmdline,
-sophos_dns_journal.name 
-FROM sophos_dns_journal
-JOIN sophos_process_journal
-WHERE sophos_process_journal.sophosPID = sophos_dns_journal.sophosPID
