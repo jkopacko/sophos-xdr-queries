@@ -1,3 +1,12 @@
+-- author: jkopacko
+
+  += Descriptive names: N/A
+  += Variable type: N/A
+  += Value: wildcards are supported
+  += version 1.0 - 03/10/23
+  
+*/
+
 SELECT name, 
 --policyLastModifiedDate will reflect the last modified date of the policy in the Central UI
 substr(data,0,9) AS policyLastModifiedDate, 
