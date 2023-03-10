@@ -1,6 +1,5 @@
 /*
 -- author: https://www.kolide.com/blog/the-file-table-osquery-s-secret-weapon
-
 += Descriptive names: N/A
 += Variable type: N/A
 += Value: N/A
@@ -18,4 +17,4 @@ SELECT SUM(file.size) AS gdrive_size,
            FROM mounts
            WHERE PATH = '/')) AS gdrive_percentage_used
 FROM FILE
-WHERE file.path LIKE '/Users/%/Google Drive/%%';
+WHERE file.path LIKE '/Users/%/Google Drive/%%'
