@@ -1,4 +1,12 @@
-# This query will search for users apart of the local administrator group
+/*
+--author: Sophos Community
++= Descriptive names: N/A
++= Variable type: N/A
++= Value: N/A
++= Version 1.0 - 04/10/21
++= Query type: Live Discover
++= OS Support: Windows
+*/
 
 SELECT username, groupname, type, u.UID, g.GID, Description, comment 
 FROM users u 
