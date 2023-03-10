@@ -1,10 +1,11 @@
 /*
 -- author: jkopacko
-
   += Descriptive names: N/A
   += Variable type: N/A
   += Value: N/A
-  += version 1.0 - 03/10/23
+  += Version 1.0 - 03/10/23
+  += Query type: Live Discover
+  += OS Support: Windows
 */
 
 WITH policyStamp (stamp) AS 
