@@ -1,4 +1,14 @@
-#### This will use the Sophos File Journal to compare ML, PUA, Local and Global Scoring in suspicious locations of EXEs
+/*
+--author: @jkopacko
++= Descriptive names: N/A
++= Variable type: N/A
++= Value: N/A
++= Version 1.0 - N/A
++= Query type: Live Discover
++= OS Support: Windows
+
+NOTE: not an exhaustive set of paths -- could add more
+*/
 
 SELECT
 sfp.sha256,
