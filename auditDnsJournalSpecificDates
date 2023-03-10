@@ -1,6 +1,12 @@
--- Variable domainName as STRING
--- Variable day1 as DATE
--- Variable day2 as DATE
+/*
+--author: @jkopacko
++= Descriptive names: domainName, day1, day2
++= Variable type: String, DATE, DATE
++= Value: sophos, Select two dates preferably within 30 days range or less
++= Version 2.0 - 12/10/22
++= Query type: Live Discover
++= OS Support: Windows
+*/
 
 SELECT datetime(sophos_dns_journal.time, 'unixepoch', 'localtime') as timeStamp,
 sophos_dns_journal.sophosPID,
