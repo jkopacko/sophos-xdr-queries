@@ -1,5 +1,12 @@
--- 36 hour interval
--- Very resource intensive (tried other USB query in repo)
+/*
+--author: @jkopacko
++= Descriptive names: N/A
++= Variable type: N/A
++= Value: N/A
++= Version 1.0 - N/A
++= Query type: Live Discover
++= OS Support: Windows
+*/
 
 SELECT datetime(time,'unixepoch','localtime') AS time,
 CASE eventType
