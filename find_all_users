@@ -1,5 +1,0 @@
-#This will gather all users on the workstation
-
-Select Username, Description, Directory 
-FROM Users 
-WHERE GID <> "513";
