@@ -1,4 +1,0 @@
-SELECT *
-FROM windows_security_center
-WHERE 'Poor' 
-IN (firewall, autoupdate, antivirus, antispyware, internet_settings, windows_security_center_service, user_account_control)
