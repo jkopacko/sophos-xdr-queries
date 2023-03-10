@@ -1,5 +1,0 @@
-# This will grab hardware serial name, FQDN, CPU Type, CPU Brand, RAM in GB, HW Vendor and Model.
-
-SELECT 
-hardware_serial, hostname AS FQDN, cpu_type, cpu_brand AS CPU_Model, (physical_memory/1073741824) AS GB, hardware_vendor, hardware_model 
-FROM system_info;
