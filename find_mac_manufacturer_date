@@ -1,4 +1,12 @@
-/* Source: https://www.kolide.com/blog/how-to-find-a-mac-s-manufacture-date-using-osquery#creating-a-lookup-table-using-common-table-expressions */
+/*
+--author: https://www.kolide.com/blog/how-to-find-a-mac-s-manufacture-date-using-osquery#creating-a-lookup-table-using-common-table-expressions
++= Descriptive names: N/A
++= Variable type: N/A
++= Value: N/A
++= Version 1.0 - 08/10/22
++= Query type: Live Discover
++= OS Support: macOS
+*/
 
 WITH
 serial_partial AS (
