@@ -1,3 +1,13 @@
+/*
+--author: @jkopacko
++= Descriptive names: N/A
++= Variable type: N/A
++= Value: N/A
++= Version 1.0 - N/A
++= Query type: Live Discover
++= OS Support: Windows
+*/
+
 SELECT DISTINCT
       eventid,
       CASE eventid
