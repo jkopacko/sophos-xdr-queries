@@ -9,6 +9,7 @@ This repo hosts Live Discover Queries written for Sophos Central
   += **Value**: <value>  
   += **version** ## - MM/DD/YY  
   += **Query type**: <L/D or D/L>  
+  += **OS Support**: <Windows, Linux, or macOS>  
 
 Variable type is a menu drop down selection of String, Date, SHA-256, IP Address, sophosPID, URL. Registry Key, File Path, Device Name, Username.
   
