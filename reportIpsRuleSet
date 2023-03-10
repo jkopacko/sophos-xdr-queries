@@ -1,4 +1,12 @@
-##This will return all IPS Rules on the Endpoint
+/*
+--author: @jkopacko
++= Descriptive names: N/A
++= Variable type: N/A
++= Value: N/A
++= Version 1.0 - N/A
++= Query type: Live Discover
++= OS Support: Windows
+*/
 
 WITH ips_rule_table AS (SELECT * FROM grep WHERE path = ''C:\ProgramData\Sophos\Sophos Network Threat Protection\IPS\system.rules' AND pattern = '(msg:'),
 ips_rule_descr AS (
@@ -13,5 +21,3 @@ LTRIM(SPLIT(line, ' ', 6)) Destination_Port,
 SPLIT(substr(line,instr(line,'msg:"')+5,LENGTH(line)-instr(line,'msg:"')),'"',0) Rule
 FROM ips_rule_table)
 SELECT * FROM ips_rule_descr
-
-
