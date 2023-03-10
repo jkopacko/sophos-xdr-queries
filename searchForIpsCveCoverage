@@ -1,5 +1,12 @@
-##This will query the IPS Rule Table for a specific CVE you define
-##Declare $$Vuln-Numb$$ as a string operator type
+/*
+--author: @jkopacko
++= Descriptive names: Vuln-Number
++= Variable type: String
++= Value: 2022-2071
++= Version 1.0 - 08/10/22
++= Query type: Live Discover
++= OS Support: Windows
+*/
 
 WITH ips_rule_table AS (SELECT * FROM grep WHERE path = 'C:\ProgramData\Sophos\Sophos Network Threat Protection\IPS\system.rules' AND pattern = '(msg:'),
 ips_rule_descr AS (
@@ -15,5 +22,3 @@ SPLIT(substr(line,instr(line,'msg:"')+5,LENGTH(line)-instr(line,'msg:"')),'"',0)
 FROM ips_rule_table)
 SELECT * FROM ips_rule_descr
 WHERE Rule LIKE '%CVE-$$Vuln-Numb$$%'
-
-
