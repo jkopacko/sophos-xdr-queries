@@ -1,0 +1,18 @@
+/*
+--author: @jkopacko
++= Descriptive names: N/A
++= Variable type: N/A
++= Value: N/A
++= Version 1.0 - 08/10/22
++= Query type: Live Discover
++= OS Support: Windows
+*/
+
+SELECT cpu_logical_cores, 
+physical_memory, 
+free_space 
+FROM logical_drives 
+JOIN system_info on 1 
+AND boot_partition=1 
+WHERE cpu_logical_cores < 2 
+OR physical_memory < 4000000000 OR free_space < 8000000000
