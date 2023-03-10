@@ -1,6 +1,15 @@
--- Check data lake hydration schedule
+/*
+-- author: jkopacko
+  += Descriptive names: N/A
+  += Variable type: N/A
+  += Value: N/A
+  += Version 1.0 - 03/10/23
+  += Query type: Live Discover
+  += OS Support: Windows
+*/
 
-SELECT name, query,
+SELECT name, 
+query,
 CAST(datetime(last_executed, 'unixepoch') AS TEXT) AS 'Last Executed', interval AS 'Update Interval in Seconds',
 interval / 60 AS 'Update Interval Minutes',
 CASE denylisted
