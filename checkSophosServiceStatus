@@ -1,3 +1,13 @@
+/*
+--author: 
++= Descriptive names: N/A
++= Variable type: N/A
++= Value: N/A
++= Version 1.0 - 03/10/23
++= Query type: Live Discover
++= OS Support: Windows
+*/
+
 SELECT
   (SELECT
     CASE
@@ -21,8 +31,8 @@ SELECT
   (SELECT
     CASE
       WHEN data = 1 THEN 'GOOD ✅'
-      WHEN data = 2 THEN 'SUSPICIOUS ⚠️' || 'Investigate Event details in sophos Endpoint Dashboard'
-      WHEN data = 3 THEN 'BAD ❌'  || 'Investigate Event details in sophos Endpoint Dashboard'
+      WHEN data = 2 THEN 'SUSPICIOUS ⚠️' || 'Investigate Event details in Sophos Endpoint Dashboard'
+      WHEN data = 3 THEN 'BAD ❌'  || 'Investigate Event details in Sophos Endpoint Dashboard'
     END Satus
   FROM
     registry
