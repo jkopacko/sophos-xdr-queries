@@ -26,3 +26,5 @@ If changes occur to Sophos Central XDR schema that causes a failure, I will do m
 ### Disclaimer
   
 The queries are not supported via Sophos Support Channels and are provided "as-is."
+  
+As of 3/09/2023, I am reviewing schema changes to queries created at launch of XDR and updating for proper column names.
