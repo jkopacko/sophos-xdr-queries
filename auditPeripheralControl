@@ -1,18 +1,23 @@
 /* 
-Define variable name deviceTypePath as variable type STRING
-Ex: "\device_types\device_type_000006" 
---No quotes
-Where device type "00000#" = 
 
-0 = optical drive
-1 = floppy drive
-2 = modem
-3 = encrypted storage
-4 = infrared
-5 = wireless
-6 = removeable storage
-7 = bluetooth
-8 = mtp
+-- author: jkopacko  
+
+  += Descriptive names: deviceTypePath  
+  += Variable type: String -- Ex: \device_types\device_type_000006  
+  += Value: wildcards are supported  
+  += version 1.0 - 03/01/23  
+
+**KEY**: device type "00000#"  
+
+0 = optical drive  
+1 = floppy drive  
+2 = modem  
+3 = encrypted storage  
+4 = infrared  
+5 = wireless  
+6 = removeable storage  
+7 = bluetooth  
+8 = mtp  
 */
 
 WITH policyTimeStamp AS (
