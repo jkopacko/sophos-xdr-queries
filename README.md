@@ -4,20 +4,19 @@ This repo hosts Live Discover Queries written for Sophos Central
 
 ## Read The Comments
 
-/*
--- author: jkopacko
-  += Descriptive names: <variableName>  
-  += Variable type: <type>  
-  += Value: <value>  
-  += version ## - MM/DD/YY
-  += Query type: <L/D or D/L>
-*/
+  += **Descriptive names**: <variableName>  
+  += **Variable type**: <type>  
+  += **Value**: <value>  
+  += **version** ## - MM/DD/YY  
+  += **Query type**: <L/D or D/L>  
 
 Variable type is a menu drop down selection of String, Date, SHA-256, IP Address, sophosPID, URL. Registry Key, File Path, Device Name, Username.
   
 Value is determined by the variable type. Items like Date will give you a menu option, otherwise, you manually enter the value. You can use wildcards here (%).
   
-Version number and dates are kept to help maintain the integrity of the code. If changes occur to Sophos Central XDR schema that causes a failure, I will do my best to stay on top of them, but reach out with the repo link and screen of the error described to notifications@kopacko.us.
+Version number and dates are kept to help maintain the integrity of the code. 
+
+If changes occur to Sophos Central XDR schema that causes a failure, I will do my best to stay on top of them, but reach out with the repo link and screen of the error described to notifications@kopacko.us.
   
 ### Disclaimer
   
