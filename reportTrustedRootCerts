@@ -1,0 +1,17 @@
+
+/*
+--author: @jkopacko
++= Descriptive names: N/A
++= Variable type: N/A
++= Value: N/A
++= Version 1.0 - N/A
++= Query type: Live Discover
++= OS Support: Windows
+*/
+
+SELECT common_name, 
+issuer, 
+strftime('%d/%m/%Y', datetime(not_valid_after, 'unixepoch')) as expiration_date 
+FROM certificates
+WHERE path = 'CurrentUser\Trusted Root Certification Authorities' 
+ORDER BY common_name
