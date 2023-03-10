@@ -1,3 +1,13 @@
+/*
+--author: @jkopacko
++= Descriptive names: YYYY-MM-DD
++= Variable type: String
++= Value: 2023-03-01, 2023-02-01, etc
++= Version 1.0 - 03/10/23
++= Query type: Live Discover
++= OS Support: Windows
+*/
+
 --Read Log Files
 WITH firewallLogs AS(
     SELECT *
