@@ -9,7 +9,6 @@
 += OS Support: macOS
 */
 
-
 SELECT SUM(file.size) AS gdrive_size,
   (SELECT (mounts.blocks * mounts.blocks_size)
    FROM mounts
