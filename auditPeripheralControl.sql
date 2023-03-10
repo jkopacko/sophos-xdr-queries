@@ -7,7 +7,7 @@
   += Value: wildcards are supported  
   += version 1.0 - 03/01/23  
 
-**KEY**: device type "00000#"  
+KEY: device type "00000#"  
 
 0 = optical drive  
 1 = floppy drive  
