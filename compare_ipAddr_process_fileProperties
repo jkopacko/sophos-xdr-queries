@@ -1,4 +1,12 @@
-## Define $$IPaddress$$
+/*
+--author: @jkopacko
++= Descriptive names: IPaddress
++= Variable type: String
++= Value: 192.168.0.1
++= Version 1.0 - 03/10/21
++= Query type: Live Discover
++= OS Support: Windows
+*/
 
 SELECT datetime(sophos_ip_journal.processStartTime, 'unixepoch', 'localtime') AS process_timestamp,
 sophos_process_journal.PID AS ProcessID, 
