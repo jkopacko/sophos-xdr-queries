@@ -1,5 +1,12 @@
-#### This will use a variable for a file path and choose the reputation on the items
-## Use descriptive name “filepath” as variableType “File Path”
+/*
+--author: @jkopacko
++= Descriptive names: filepath
++= Variable type: String
++= Value: C:\Some\Path
++= Version 1.0 - N/A
++= Query type: Live Discover
++= OS Support: Windows
+*/
  
 SELECT
 sfp.sha256,
