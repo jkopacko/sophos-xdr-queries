@@ -7,7 +7,7 @@ This repo hosts Live Discover Queries written for Sophos Central
   += **Descriptive names**: <variableName>  
   += **Variable type**: <type>  
   += **Value**: <value>  
-  += **version** ## - MM/DD/YY  
+  += **Version** ## - MM/DD/YY  
   += **Query type**: <L/D or D/L>  
   += **OS Support**: <Windows, Linux, or macOS>  
 
