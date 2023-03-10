@@ -1,0 +1,17 @@
+
+/*
+--author: @jkopacko
++= Descriptive names: name
++= Variable type: String
++= Value: Username
++= Version 1.0 - N/A
++= Query type: Live Discover
++= OS Support: Windows
+*/
+
+SELECT user, logon_domain,
+logon_server, 
+dns_domain_name, 
+upn
+FROM logon_sessions
+WHERE user LIKE '%$$name$$%'

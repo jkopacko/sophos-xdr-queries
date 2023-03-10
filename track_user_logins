@@ -1,6 +1,0 @@
-#This query for track user logins across the environment
-##You will need to add the variable name as a string type
-
-SELECT user, logon_domain, logon_server, dns_domain_name, upn
-FROM logon_sessions
-WHERE user LIKE '%$$name$$%'
