@@ -1,12 +1,10 @@
 /*
-
 -- author: jkopacko
-
   += Descriptive names: fw_rule_id, src_ip
   += Variable type: String
   += Value: wildcards are supported
-  += version 1.0 - 03/01/23
-  
+  += Version 1.0 - 03/01/23
+  += Query type: Data Lake
 */
 
 SELECT
