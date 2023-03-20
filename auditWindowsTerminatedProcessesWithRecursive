@@ -1,0 +1,48 @@
+/*
+--author: @jkopacko
++= Descriptive names: processName
++= Variable type: String
++= Value: nslookup
++= Version 1.0 - 03/20/23
++= Query type: Live Discover
++= OS Support: Windows
+*/
+
+WITH RECURSIVE
+  hexchars(key, value) as (
+    VALUES
+     ('0', 0),('1', 1),('2', 2),('3', 3),('4', 4),('5', 5),('6', 6),('7', 7),('8', 8),('9', 9),
+     ('A', 10),('B', 11),('C', 12),('D', 13),('E', 14),('F', 15),
+     ('a', 10),('b', 11),('c', 12),('d', 13),('e', 14),('f', 15)
+  ),
+eventData AS ( 
+SELECT datetime(time,'unixepoch','localtime') AS eventTime,
+eventid,
+task_message,
+computer,
+CAST(json_extract(data, '$.EventData.ProcessId') AS VARCHAR) AS PID,
+CAST(json_extract(data, '$.EventData.ProcessName') AS TEXT) AS processName,
+CAST(json_extract(data, '$.EventData.SubjectDomainName') AS TEXT) AS domainName,
+CAST(json_extract(data, '$.EventData.SubjectUserName') AS TEXT) AS userName
+FROM sophos_windows_events 
+WHERE source = 'Security' 
+AND eventid = '4689'
+AND json_extract(data, '$.EventData.ProcessName') LIKE '%$$processName$$%'),
+unhex(str, val, weight) AS (
+SELECT (SELECT PID FROM eventData ), 0, 1
+UNION ALL
+SELECT 
+ substr(str, 1, length(str) - 1),
+ val + (select value from hexchars where key = substr(str, length(str), 1)) * weight,
+ weight * 16
+FROM unhex WHERE length(str) > 2
+)
+SELECT eventTime, 
+task_message,
+domainName,
+userName,
+computer, 
+processName,
+(SELECT val FROM unhex ORDER BY weight DESC LIMIT 1) AS PID
+FROM eventData 
+WHERE processName LIKE '%$$processName$$%'
