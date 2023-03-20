@@ -1,0 +1,22 @@
+/*
+--author: @jkopacko
++= Descriptive names: processName
++= Variable type: String
++= Value: nslookup
++= Version 2.0 - 03/20/23
++= Query type: Live Discover
++= OS Support: Windows
+*/
+
+SELECT datetime(time,'unixepoch','localtime') AS eventTime,
+eventid,
+task_message,
+computer,
+(SELECT int FROM hex_to_int WHERE hex_string = (json_extract(data, '$.EventData.ProcessId'))) AS PID,
+CAST(json_extract(data, '$.EventData.ProcessName') AS TEXT) AS processName,
+CAST(json_extract(data, '$.EventData.SubjectDomainName') AS TEXT) AS domainName,
+CAST(json_extract(data, '$.EventData.SubjectUserName') AS TEXT) AS userName
+FROM sophos_windows_events 
+WHERE source = 'Security' 
+AND eventid = '4689'
+AND json_extract(data, '$.EventData.ProcessName') LIKE '%$$processName$$%'
