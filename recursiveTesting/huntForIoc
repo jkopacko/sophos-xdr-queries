@@ -1,0 +1,31 @@
+-- v2
+-- Define string variables $$days$$ and $$name$$
+-- This is not production ready for scale
+-- This will perform individual query
+
+--Build a recursive virtual table of time comparison
+WITH RECURSIVE    
+timeTable(timeValue) AS (       
+    VALUES 
+        --Cast a value $$days$$ agos
+        ((SELECT CAST (strftime ('%s', 'now','-$$days$$ days') AS INT)))
+        UNION ALL
+        --Create a list of values in increments of 4 hours (4 * 3600)
+        SELECT timeValue+(4*3600) 
+        FROM timeTable 
+        WHERE timeValue < (SELECT CAST (strftime ('%s', 'now') AS INT))
+        )
+--Build table of values to query against
+SELECT
+spj.sophos_pid AS sophosPID,
+Datetime(spj.time,'unixepoch','localtime') AS localTime,
+CASE
+   WHEN spj.event_type = 0 THEN 'start'
+   WHEN spj.event_type = 1 THEN 'end'
+END AS status,
+spj.process_name,
+spj.cmd_line AS cli_Arguments,
+spj.path AS filepath_Location
+FROM timeTable LEFT JOIN sophos_process_journal spj
+ON spj.time >= timeTable.timeValue AND spj.time < timeTable.timeValue + (4 * 3600)
+WHERE cmd_line LIKE '%$$name$$%'
