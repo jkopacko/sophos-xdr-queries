@@ -9,11 +9,11 @@
 */
 
 SELECT datetime(sophos_dns_journal.time, 'unixepoch', 'localtime') as timeStamp,
-sophos_dns_journal.sophosPID,
-sophos_process_journal.cmdline,
+sophos_dns_journal.sophos_PID,
+sophos_process_journal.cmd_line,
 sophos_dns_journal.name 
 FROM sophos_dns_journal
 JOIN sophos_process_journal
 WHERE sophos_dns_journal.name LIKE '%$$domainName$$%'
-AND sophos_process_journal.sophosPID = sophos_dns_journal.sophosPID
+AND sophos_process_journal.sophos_PID = sophos_dns_journal.sophos_PID
 AND (sophos_dns_journal.time > '$$day1$$' AND sophos_dns_journal.time < '$$day2$$')
