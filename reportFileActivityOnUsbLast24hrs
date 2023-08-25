@@ -9,7 +9,7 @@
 */
 
 SELECT datetime(time,'unixepoch','localtime') AS time,
-CASE eventType
+CASE event_Type
    WHEN 0 THEN 'Created'
    WHEN 1 THEN 'Renamed'
    WHEN 2 THEN 'Deleted'
@@ -20,17 +20,23 @@ CASE eventType
    WHEN 7 THEN 'Ownership Modified'
    WHEN 8 THEN 'Binary File Mapped'
 END AS Action,
-pid,
-datetime(processStartTime,'unixepoch','localtime') AS processStartTime,
-path,
+sophos_pid,
+datetime(process_Start_Time,'unixepoch','localtime') AS processStartTime,
 file,
---pathtype | https://docs.microsoft.com/en-us/windows-hardware/drivers/ddi/fltuserstructures/ne-fltuserstructures-_flt_filesystem_type | is this useful?
-datetime(creationTime,'unixepoch','localtime') AS creationTime,
-datetime(lastAccessTime,'unixepoch','localtime') AS lastAccess,
-datetime(lastWriteTime,'unixepoch','localtime') AS lastWrite,
-datetime(changeTime,'unixepoch','localtime') AS changeTime
+file_extension,
+path,
+CASE path_type
+   WHEN 0 THEN 'Unknown'
+   WHEN 1 THEN 'RAW'
+   WHEN 2 THEN 'NTFS'
+   WHEN 22 THEN 'EXFAT'
+   ELSE 'Check FLT File System Type in Schema'
+END AS path_type,
+datetime(creation_Time,'unixepoch','localtime') AS creationTime,
+datetime(last_Access_Time,'unixepoch','localtime') AS lastAccess,
+datetime(last_Write_Time,'unixepoch','localtime') AS lastWrite
 FROM sophos_file_journal
-WHERE pathname LIKE '\Device\HarddiskVolume%%\%'
-AND time > STRFTIME('%s',"NOW",'-36 HOUR')
+WHERE time > STRFTIME('%s',"NOW",'-24 HOURS')
 AND time < STRFTIME('%s',"NOW",'-0 HOUR')
+AND PATH NOT LIKE 'C:\%%'
 ORDER BY TIME DESC
