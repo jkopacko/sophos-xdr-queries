@@ -1,0 +1,49 @@
+WITH core_agent AS ( 
+SELECT
+data AS coreAgent
+FROM registry
+WHERE
+key LIKE 'HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\CloudSubscriptions\WindowsCloudNextGen'
+AND name = 'DisplayVersion'),
+endpoint_protection AS ( 
+SELECT
+data AS endpointProtection
+FROM registry
+WHERE
+key LIKE 'HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\CloudSubscriptions\WindowsCloudAV'
+AND name = 'DisplayVersion'),
+intercept_x AS (
+SELECT
+data AS interceptX
+FROM registry
+WHERE
+key LIKE 'HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\CloudSubscriptions\WindowsCloudHitmanProAlert'
+AND name = 'DisplayVersion'),
+cde AS (
+SELECT
+data AS diskEncryptionAgent
+FROM registry
+WHERE
+key LIKE 'HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\CloudSubscriptions\WindowsCloudAV'
+AND name = 'DisplayVersion'),
+mdr AS (
+SELECT
+data AS mdrAgent
+FROM registry
+WHERE
+key LIKE 'HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\CloudSubscriptions\WindowsCloudAV'
+AND name = 'DisplayVersion'),
+last_update AS (
+SELECT
+  CASE
+     WHEN
+     -- Currently using 60 min checks
+        datetime(data,'unixepoch') < datetime(strftime('%s','Now','-60 minutes'),'unixepoch') THEN 'Out of Date'
+     ELSE 'Last Update: ' || datetime(data,'unixepoch')
+  END Status
+FROM
+   registry
+WHERE
+  key = "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Sophos\AutoUpdate\UpdateStatus\" AND Name = 'LastUpdateTime')
+  
+SELECT * FROM core_agent JOIN endpoint_protection JOIN intercept_x JOIN cde JOIN mdr JOIN last_update
