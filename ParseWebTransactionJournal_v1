@@ -1,0 +1,15 @@
+-- declare date/time endTime (latest historical)
+-- declare date/time startTime (earliest historical)
+
+SELECT datetime(time, 'unixepoch', 'localtime') AS localTime,
+referrer,
+url,
+CAST(json_extract(request_headers,'$.sec-ch-ua') AS TEXT) AS Browser,
+decision,
+reason,
+file_type,
+content_type
+FROM sophos_web_transaction_journal 
+WHERE (time > $$startTime$$ AND time < $$endTime$$)
+AND status_code = 200
+LIMIT 100
