@@ -1,0 +1,26 @@
+/*
+--author: @jkopacko
++= Version 1.2 - 07/05/2024 - 
++= Query type: Live Discover
++= OS Support: Windows Server Only
+NOTES:
+  - Per MS Learn, by default SMB v1 is not installed, while v2 and v3 are enabled by default.
+
+  - As a result, a key discovered in this query is MANUALLY entered.
+
+*/
+
+SELECT name,
+type, 
+key, 
+data,
+datetime(mtime, 'unixepoch', 'localtime') AS modified_Time,
+CASE 
+  WHEN (name = 'SMB1' AND data = 1) THEN 'SMB Version 1 enabled'
+  WHEN (name = 'SMB2' AND data = 1) THEN 'SMB Version 2 enabled'
+  WHEN (name = 'SMB3' AND data = 1) THEN 'SMB Version 3 enabled'
+  ELSE 'SMB is using OS default settings'
+END AS smb_Version
+FROM registry 
+WHERE path LIKE 'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\%%'
+AND name LIKE 'SMB%'
