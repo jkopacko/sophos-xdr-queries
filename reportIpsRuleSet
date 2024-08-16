@@ -3,12 +3,12 @@
 += Descriptive names: N/A
 += Variable type: N/A
 += Value: N/A
-+= Version 1.0 - N/A
++= Version 1.01 - N/A
 += Query type: Live Discover
 += OS Support: Windows
 */
 
-WITH ips_rule_table AS (SELECT * FROM grep WHERE path = ''C:\ProgramData\Sophos\Sophos Network Threat Protection\IPS\system.rules' AND pattern = '(msg:'),
+WITH ips_rule_table AS (SELECT * FROM grep WHERE path = 'C:\ProgramData\Sophos\Sophos Network Threat Protection\IPS\system.rules' AND pattern = '(msg:'),
 ips_rule_descr AS (
 SELECT
 SPLIT(line, ' ', 0) Rule_Action,
