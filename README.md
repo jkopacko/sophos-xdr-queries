@@ -8,8 +8,11 @@ This repo hosts EDR and XDR Queries written for Sophos Central. This is a collec
 [CURRENT FORMAT] 
 /***********************
 Description:
+
 Source:     [Data Lake | Live Endpoint]  
+
 OS:         [Windows | Mac | Linux]       
+
 Variable:   [OPTIONAL]
   +NAME
   +TYPE
