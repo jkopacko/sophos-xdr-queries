@@ -6,6 +6,7 @@ This repo hosts EDR and XDR Queries written for Sophos Central. This is a collec
 ## Read The Comments
 
 [CURRENT FORMAT] 
+
 /***********************
 
 Description:
@@ -21,6 +22,7 @@ Variable:   [OPTIONAL]
   +TYPE
   
   +VALUE
+
 ************************/
 
 
