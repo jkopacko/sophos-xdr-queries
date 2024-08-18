@@ -1,0 +1,15 @@
+/***********************
+Source: Live Endpoint  *
+OS:     Windows        *
+************************/
+
+SELECT name, 
+datetime(mtime,'unixepoch','localtime') as modified_Time,
+   CASE 
+      WHEN DATA = '1' THEN 'Enabled'
+      WHEN DATA = '0' THEN 'Disabled'
+      ELSE 'Disabled'
+   END AS status
+FROM registry 
+WHERE path LIKE 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging\%%''
+AND name = 'EnableScriptBlockLogging'
