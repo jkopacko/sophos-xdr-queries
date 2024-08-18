@@ -1,9 +1,23 @@
-# Sophos Central XDR Queries
+# Sophos Central EDR/XDR Queries 
+| UPDATED AUGUST 2024 |
 
-This repo hosts Live Discover Queries written for Sophos Central
+This repo hosts EDR and XDR Queries written for Sophos Central. This is a collection amassing 3 years, so please test on a non-prod machine. Code fragments in the OLD FORMAT may need a revision on column name formatting changes that occurred in the platform data set.
 
 ## Read The Comments
 
+[CURRENT FORMAT] 
+/***********************
+Description:
+Source:     [Data Lake | Live Endpoint]  
+OS:         [Windows | Mac | Linux]       
+Variable:   [OPTIONAL]
+  +NAME
+  +TYPE
+  +VALUE
+************************/
+
+
+[OLD FORMAT -- TEST FOR ACCURACY]
   += **Descriptive names**: <variableName>  
   += **Variable type**: <type>  
   += **Value**: <value>  
@@ -20,11 +34,7 @@ This repo hosts Live Discover Queries written for Sophos Central
 **Query type** indicates if it is Live Discover (on agent) or Data Lake (on Central cloud).
   
 **OS Support** indicates the operating system the query is designed for. Data Lake queries will not have this value.
-
-If changes occur to Sophos Central XDR schema that causes a failure, I will do my best to stay on top of them, but reach out with the repo link and screen of the error described to notifications@kopacko.us.
   
 ### Disclaimer
   
 The queries are not supported via Sophos Support Channels and are provided "as-is."
-  
-As of 3/09/2023, I am reviewing schema changes to queries created at launch of XDR and updating for proper column names.
