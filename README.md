@@ -27,6 +27,7 @@ Variable:   [OPTIONAL]
 
 
 [OLD FORMAT -- TEST FOR ACCURACY]
+
   += **Descriptive names**: <variableName>  
   += **Variable type**: <type>  
   += **Value**: <value>  
