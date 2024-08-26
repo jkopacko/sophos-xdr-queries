@@ -1,0 +1,9 @@
+--Declare YYYY-MM-DD as a string variable
+
+WITH osqueryLog AS 
+(SELECT * FROM grep 
+WHERE path = 'C:\ProgramData\Sophos\Live Query\Logs\SophosOsquery.log'
+AND pattern = '$$YYYY-MM-DD$$'),
+osqueryLogSplit AS (SELECT SPLIT(line, 'T', 0) Date, SUBSTR(line,12,12) Time, SPLIT(line, ']',1) Description
+FROM osqueryLog)
+SELECT * from osqueryLogSplit
