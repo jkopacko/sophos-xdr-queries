@@ -1,0 +1,34 @@
+-- Define string variables $$days$$
+-- This is not production ready for scale
+-- This will perform individual query
+-- Compliments of Elida for building out the WinSec logic
+
+--Build a recursive virtual table of time comparison
+
+WITH RECURSIVE    
+timeTable(timeValue) AS (       
+    VALUES 
+        --Cast a value $$days$$ agos
+        ((SELECT CAST (strftime ('%s', 'now','-$$days$$ days') AS INT)))
+        UNION ALL
+        --Create a list of values in increments of 4 hours (4 * 3600)
+        SELECT timeValue+(4*3600) 
+        FROM timeTable 
+        WHERE timeValue < (SELECT CAST (strftime ('%s', 'now') AS INT))
+        )
+
+--Build table of values to query against
+
+SELECT
+strftime('%Y-%m-%dT%H:%M:%SZ', datetime(swj.time,'unixepoch')) AS date_time,
+CAST(JSON_EXTRACT(swj.data, '$.authenticationPackageName') AS TEXT) AS auth_package_name,
+CAST(JSON_EXTRACT(swj.data, '$.targetDomainName') AS TEXT) domain_name,
+CAST(JSON_EXTRACT(swj.data, '$.targetUserName') AS TEXT) AS username,
+CAST(JSON_EXTRACT(swj.data, '$.ipAddress') AS TEXT) AS remote_address,
+CAST(JSON_EXTRACT(swj.data, '$.workstationName') AS TEXT) AS workstationName,
+swj.data
+FROM timeTable 
+LEFT JOIN sophos_winsec_journal AS swj
+   ON swj.time >= timeTable.timeValue AND swj.time < timeTable.timeValue + (4 * 3600)
+WHERE swj.event_type IN ('4624','4625')
+   AND workstationName LIKE '$$workstation$$'
