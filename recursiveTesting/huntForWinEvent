@@ -1,7 +1,7 @@
 -- Define string variables $$days$$
 -- This is not production ready for scale
 -- This will perform individual query
--- Compliments of Elida for building out the WinSec logic
+-- Compliments of @Elida001 for building out the WinSec logic
 
 --Build a recursive virtual table of time comparison
 
