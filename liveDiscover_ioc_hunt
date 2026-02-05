@@ -1,8 +1,8 @@
---v3 JK
-
+--Create IOC_HUNT_BY_TYPE 
 WITH IOC_HUNT_BY_TYPE AS (
-
+--Create IOC_List Table
 WITH IOC_LIST (ThreatActor, IOC_TYPE, Indicator) AS (
+--Enter custom values [MD5,SHA256,Domain,RegKey]
 VALUES
 ('JK_Test','MD5','21f8ec81b5cff60553b2062796b369d4'),
 ('JK_Test','MD5','881Af16E2C0B6028A15781D1D9089A86'),
@@ -15,64 +15,63 @@ VALUES
 ('XDR_Lab','Domain','4.sophosxl.net'),
 ('XDR_Lab','Domain','edge.microsoft.com'),
 ('XDR_lab','Domain','pksproddatastorewus116.blob.core.windows.net')
+('XDR_Course','RegKey','HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\Sophos UI.exe')
 )
-/* Search the MD5 data for matches */
-SELECT DISTINCT
-CASE h.path NOT NULL
-WHEN 1 THEN '!! DETECTED IOC --> ' || h.path
-ELSE 'IOC NOT FOUND'
-END Result,
+--Search MD5
+SELECT DISTINCT 
+CASE h.path NOT NULL 
+--Return the path of the detection
+WHEN 1 THEN ' DETECTION ' || char(10) || 'MD5 Path: ' || h.path  
+ELSE 'IOC NOT FOUND' 
+END AS alerts,
 ThreatActor, IOC_TYPE, Indicator
 FROM IOC_LIST ioc JOIN sophos_process_journal spj ON 1
-LEFT JOIN hash h on h.path = spj.path AND h.md5 = LOWER (ioc.Indicator)
+LEFT JOIN hash h on h.path = spj.path AND LOWER (h.md5) = LOWER (ioc.Indicator)
 WHERE ioc.ioc_type = 'MD5'
+AND spj.time > strftime('%s','now','-7 days')
 
+--Merge
 UNION ALL 
 
-/* Search the 256 data for matches */
+--Search SHA256
 SELECT DISTINCT 
-CASE spj.SHA256 NOT NULL 
-WHEN 1 THEN '!! DETECTED IOC --> ' || spj.path 
-ELSE 'IOC NOT FOUND' 
-END Result,
+--Return the path of the detection
+'️ DETECTION️ ' || char(10) || 'SHA256 Path: ' || spj.path AS alerts,
 ThreatActor, IOC_TYPE, Indicator
-FROM IOC_LIST ioc LEFT JOIN sophos_process_journal spj ON spj.SHA256 = LOWER (ioc.indicator) AND spj.time > strftime('%s','now','-7 days')
+FROM IOC_LIST ioc 
+LEFT JOIN sophos_process_journal spj ON spj.SHA256 = LOWER (ioc.indicator) 
 WHERE ioc.ioc_type = 'sha256'
--- Merge
+AND spj.time > strftime('%s','now','-7 days')
+
+--Merge
 UNION ALL 
-/* Search the Process and Filename matches
+
+--Search Domain
 SELECT DISTINCT
-CASE sfj.file NOT NULL
-WHEN 1 THEN 'DETECTED IOC >' || sfj.file
+CASE sdj.sophos_pid NOT NULL
+--Return the PID + cmd_line | NOTE: limited testing on how reliable cmd_line data is
+WHEN 1 THEN '️ DETECTION️ ' || char(10) || 'PID:sophos_pid -> ' || sdj.sophos_pid || char(10) || 'cmd_line: ' || spj.cmd_line
 ELSE 'IOC NOT FOUND'
-END Result,
+END AS alerts,
 ThreatActor, IOC_TYPE, Indicator
-FROM IOC_LIST ioc LEFT JOIN sophos_file_journal sfj on LOWER (sfj.file) = LOWER (ioc.indicator)
-WHERE ioc.ioc_type = 'Filename'
-UNION ALL
-*/
---Search the IP Matches
-SELECT DISTINCT
-CASE sij.SophosPID NOT NULL
-WHEN 1 THEN '!! DETECTED IOC --> ' || spj.cmdLine
-ELSE 'IOC NOT FOUND'
-END Result,
-ThreatActor, IOC_TYPE, Indicator
-FROM IOC_LIST ioc LEFT JOIN sophos_ip_journal sij ON sij.destination = ioc.indicator AND sij.time > strftime('%s','now','-7 days')
-JOIN sophos_process_journal spj ON spj.SophosPID = sij.SophosPID
-WHERE ioc.ioc_type = 'IP'
+--FROM IOC_LIST ioc LEFT JOIN sophos_dns_journal sdj ON sdj.name = LOWER ('%' || ioc.indicator || '%') AND sdj.time > strftime('%s','now','-12 hours')
+FROM IOC_LIST ioc LEFT JOIN sophos_dns_journal sdj ON LOWER (sdj.name) LIKE LOWER ('%' || ioc.indicator || '%') AND sdj.time > strftime('%s','now','-7 days')
+LEFT JOIN sophos_process_journal spj ON spj.sophos_pid = sdj.sophos_pid
+WHERE ioc.ioc_type = 'Domain'
+AND spj.time > strftime('%s','now','-7 days')
+
 --Merge 
 UNION ALL
---Search the Domain Matches 
+
+--Search RegKey
 SELECT DISTINCT
-CASE sdj.SophosPID NOT NULL
-WHEN 1 THEN '!! DETECTED IOC --> ' || spj.cmdLine
-ELSE 'IOC NOT FOUND'
-END Result,
+CASE reg.path NOT NULL
+WHEN 1 THEN '️ DETECTION️ ' || char(10) || 'Regkey -> ' || reg.path
+--ELSE 'IOC NOT FOUND'
+END AS alerts,
 ThreatActor, IOC_TYPE, Indicator
-FROM IOC_LIST ioc LEFT JOIN sophos_dns_journal sdj ON sdj.name = ioc.indicator AND sdj.time > strftime('%s','now','-7 days')
-JOIN sophos_process_journal spj ON spj.SophosPID = sdj.SophosPID
-WHERE ioc.ioc_type = 'Domain'
+FROM IOC_LIST ioc LEFT JOIN registry reg ON reg.path LIKE ('%' || ioc.indicator || '%')
 )
 SELECT * FROM IOC_HUNT_BY_TYPE
-WHERE result <> 'IOC NOT FOUND'
+-- Filters duplicate tables created in MD5 hashing
+WHERE alerts <> 'IOC NOT FOUND'
